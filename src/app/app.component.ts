@@ -32,7 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private processState(stateType: UserState, state: User) {
-    console.log('Subscribed');
     switch (stateType) {
       case UserState.GET_USER_SUCCESS:
         this.userName = state.name;
