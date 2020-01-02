@@ -1,5 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-import { createStore } from 'redux';
 import { environment } from 'src/environments/environment';
 
 class StateTrackOptions {
@@ -27,6 +26,8 @@ export function stateTrack(options: StateTrackOptions = DEFAULT) {
       const stateTypes = options.StateEnums;
       let store;
 
+
+
       Object.defineProperty(target, key, {
         configurable: false,
         enumerable: false,
@@ -35,18 +36,24 @@ export function stateTrack(options: StateTrackOptions = DEFAULT) {
         },
         set: function(subject) {
           stateChange = subject;
-          store = createStore(
-            (state: any = {}, action: any) => ( {...action.payload} ),
-            (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
-          );
-          stateChange
-            .subscribe(({stateType, state}) => {
-              const stateStr: string = stateTypes ? stateTypes[stateType] : stateType.toString();
 
-              stateTrackUtils.logState(stateType, state);
+          import('redux').then(mod => {
+            const {createStore} = mod;
 
-              store.dispatch({type: stateStr, payload: state});
-            });
+            store = createStore(
+              (state: any = {}, action: any) => ( {...action.payload} ),
+              (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+            );
+
+            stateChange
+              .subscribe(({stateType, state}) => {
+                const stateStr: string = stateTypes ? stateTypes[stateType] : stateType.toString();
+
+                stateTrackUtils.logState(stateType, state);
+
+                store.dispatch({type: stateStr, payload: state});
+              });
+          });
         }
       });
     }

@@ -13,7 +13,9 @@ You are going to see your developer tools
 
 ![Console Logs](screens/console.png)
 
-You can integrate it with redux devtools https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
+You can integrate it with redux devtools, so stateTrack is using redux library which is going to load asynchronously.
+
+https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
 
 ![Redux DevTools](screens/redux-devtools.png)
 
