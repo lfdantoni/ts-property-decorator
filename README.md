@@ -1,4 +1,4 @@
-# AngularDecorator
+# State Track Decorator
 ![Decorator](screens/decorator.png)
 
 [Decorator Code](src/app/decorators/state-track.ts)
