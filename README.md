@@ -1,4 +1,7 @@
 # AngularDecorator
+![Decorator](screens/decorator.png)
+
+[Decorator Code](src/app/decorators/state-track.ts)
 
 It is a property decorator in order to log automatically the BehaviorSubject object changes.
 
