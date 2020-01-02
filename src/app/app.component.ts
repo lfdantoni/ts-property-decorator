@@ -28,10 +28,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getUserClick() {
-    this.manager.getUser()
+    this.manager.getUser();
   }
 
   private processState(stateType: UserState, state: User) {
+    console.log('Subscribed');
     switch (stateType) {
       case UserState.GET_USER_SUCCESS:
         this.userName = state.name;
@@ -40,10 +41,5 @@ export class AppComponent implements OnInit, OnDestroy {
         this.userName = 'loading...';
         break;
     }
-
-    console.group('processState');
-    console.log(stateType)
-    console.log(state)
-    console.groupEnd()
   }
 }

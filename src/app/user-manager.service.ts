@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { stateTrack } from './decorators/state-track';
 
 export enum UserState {
   INIT_STATE,
@@ -17,15 +18,17 @@ export class User {
   providedIn: 'root'
 })
 export class UserManagerService {
+
+  @stateTrack({StateEnums: UserState})
   stateChange = new BehaviorSubject<{stateType: UserState, state: User}>({
     stateType: UserState.INIT_STATE,
     state: this.getInitState()
-  })
+  });
 
   constructor() { }
 
   getUser() {
-    this.updateState(UserState.GET_USER);
+    this.updateState(UserState.GET_USER, this.getInitState());
 
     setTimeout(
       () => this.updateState(UserState.GET_USER_SUCCESS, {email: 'test@test.com', name: 'test'}) ,
@@ -44,6 +47,6 @@ export class UserManagerService {
     return {
       email: '',
       name: ''
-    }
+    };
   }
 }
