@@ -24,7 +24,7 @@ export function stateTrack(options: StateTrackOptions = DEFAULT) {
     if (stateTrackUtils.enableTrack()) {
       let stateChange: BehaviorSubject<{stateType: any, state: any}>;
       const stateTypes = options.StateEnums;
-      let store;
+      let store, dispatch = true;
 
 
 
@@ -38,20 +38,55 @@ export function stateTrack(options: StateTrackOptions = DEFAULT) {
           stateChange = subject;
 
           import('redux').then(mod => {
-            const {createStore} = mod;
+            const {createStore, compose, applyMiddleware} = mod;
+
+            const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+            const middleware = store => next => action => {
+              let type = -1;
+              let typeStr = '';
+
+              if (typeof action.type === 'string') {
+                type = stateTypes ?
+                  stateTypes[action.type] as number :
+                  action.type;
+                typeStr = action.type;
+              } else {
+                type = action.type as number;
+                typeStr = stateTypes[type];
+              }
+
+              if (action.payload.__updateProperty__ === undefined) {
+                stateChange.next({stateType: type, state: action.payload});
+              } else {
+                delete action.payload.__updateProperty__;
+                stateTrackUtils.logState(type, action.payload);
+                const newAction = {
+                  ...action,
+                  type: typeStr
+                };
+
+                next(newAction);
+              }
+            };
+
 
             store = createStore(
-              (state: any = {}, action: any) => ( {...action.payload} ),
-              (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+              (state: any = {}, action: any) => {
+                const nextState = {
+                  ...state,
+                  ...action.payload
+                };
+                return nextState;
+              },
+              composeEnhancers(
+                applyMiddleware(middleware)
+              )
             );
 
             stateChange
               .subscribe(({stateType, state}) => {
-                const stateStr: string = stateTypes ? stateTypes[stateType] : stateType.toString();
-
-                stateTrackUtils.logState(stateType, state);
-
-                store.dispatch({type: stateStr, payload: state});
+                store.dispatch({type: stateType, payload: {...state, __updateProperty__: false }});
               });
           });
         }

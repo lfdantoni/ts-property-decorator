@@ -14,12 +14,23 @@ You are going to see your developer tools
 ![Console Logs](screens/console.png)
 
 You can integrate it with redux devtools, so stateTrack is using redux library which is going to load asynchronously.
+You also can modify the behaviorSubject's state by sending its same state structure (or partially) on redux devtools.
+
+```
+{
+  type: 'GET_USER_SUCCESS',
+  payload: {
+    email: 'test@test.com',
+    name: 'test1234'
+  }
+}
+```
+
+![Redux DevTools Modify](screens/redux-devtools-modify.png)
 
 https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
 
 ![Redux DevTools](screens/redux-devtools.png)
-
-> **Note**:  it is only for visualization, NO change you do here will impact on the BehaviorSubject property
 
 # Configurations
 
